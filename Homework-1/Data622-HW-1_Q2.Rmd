@@ -1,0 +1,115 @@
+---
+title: "Data622-HW-1"
+author: "Deepak Mongia"
+date: "3/30/2020"
+output: html_document
+---
+
+You just recently joined a datascience team.
+
+There are two datasets junk1.txt and junk2.csv
+They have two options
+1. They can go back to the client and ask for more data
+to remedy problems with the data.
+2. They can accept the data and undertake a major analytics exercise.
+
+The team is relying on your dsc skills to determine how they
+should proceed.
+
+Can you explore the data and recommend actions for each file
+enumerating the reasons.
+
+```{r}
+library(ggplot2)
+library(cowplot)
+
+junk1_ds <- read.table("https://raw.githubusercontent.com/deepakmongia/Data622/master/Homework-1/Data/junk1.txt",header = TRUE)
+
+head(junk1_ds)
+summary(junk1_ds)
+
+```
+
+Let us look at the first file - Junk1
+
+```{r}
+unique(junk1_ds$class)
+
+junk1_ds$class = as.factor(junk1_ds$class)
+
+summary(junk1_ds)
+
+str(junk1_ds)
+
+apply(junk1_ds[,1:2], 2, sd)
+```
+
+Plotting the bixplots to see if there are any outliers:
+```{r}
+boxplot(junk1_ds[,1:2])
+```
+As we see above, there are no outliers.
+Verifying that there are no outliers:
+```{r}
+OutVals_a_1 = boxplot(junk1_ds$a, plot=FALSE)$out
+print(OutVals_a_1)
+
+OutVals_b_1 = boxplot(junk1_ds$b, plot=FALSE)$out
+print(OutVals_b_1)
+```
+
+So, it is confimed that there are no outliers in the data.
+
+Also from the table of the classes, the number of observations are equal for both the classes.
+
+So, we don't see any issues with the data - junk1, and it can be used with the analytics exercise without any further changes.
+
+
+Now, let us import the 2nd file - Junk2, and do some exploratory data analysis on the same.
+```{r}
+junk2_ds <- read.csv("https://raw.githubusercontent.com/deepakmongia/Data622/master/Homework-1/Data/junk2.csv",
+                     header = TRUE)
+
+```
+
+Doing some basic EDA
+```{r}
+dim(junk2_ds)
+
+head(junk2_ds)
+
+summary(junk2_ds)
+```
+
+Converting class feature into a factor
+```{r}
+junk2_ds$class <- as.factor(junk2_ds$class)
+
+table(junk2_ds$class)
+```
+
+So, the dataset is imbalanced as the class '1' is having only 250 observations out of 4000 total.
+
+Plotting the boxplots to see the data ranges and see if there are any outliers.
+
+```{r}
+boxplot(junk2_ds[,1:2])
+```
+
+Looks like there are outliers in both the independent features - a and b.
+Checking the outlier values.
+```{r}
+OutVals_a_2 = boxplot(junk2_ds$a, plot=FALSE)$out
+print(OutVals_a_2)
+
+OutVals_b_2 = boxplot(junk2_ds$b, plot=FALSE)$out
+print(OutVals_b_2)
+```
+
+So, there are outliers in the data.
+
+For junk2 dataset:
+1) there are outliers in the data
+2) the data is highly imbalanced
+
+So we should go back to the source team to get more samples of the class with the lower number of observations which is class '1'.
